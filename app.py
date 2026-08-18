@@ -1,20 +1,7 @@
-import sys
-import subprocess
-import os
-import json
-
-def install_packages():
-    packages = ['flask', 'requests']
-    for package in packages:
-        try:
-            __import__(package)
-        except ImportError:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
-
-install_packages()
-
 from flask import Flask, request, jsonify, render_template
 import requests
+import json
+import os
 
 app = Flask(__name__)
 DATA_FILE = 'data.json'
