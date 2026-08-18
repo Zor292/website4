@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunset Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        body { margin: 0; background-color: #0d0d0d; color: #ffffff; font-family: 'Cairo', sans-serif; direction: rtl; }
+        .text-orange { color: #ff7300; font-weight: 900; }
+        .btn { padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px; font-weight: 700; font-family: 'Cairo', sans-serif; transition: 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        .btn-orange { background: #ff7300; color: #000; }
+        .btn-red { background: #ff3333; color: #fff; }
+        .btn-yellow { background: #ffcc00; color: #000; }
+        .btn-gray { background: #333; color: #fff; }
+        
+        .card { background: #1a1a1a; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-right: 4px solid #ff7300; }
+        .flex { display: flex; align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-10 { gap: 10px; }
+        
+        input { padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 5px; margin: 5px 0; width: 100%; box-sizing: border-box; font-family: 'Cairo', sans-serif; font-weight: 700; }
+        input:focus { outline: none; border-color: #ff7300; }
+        
+        .player-card { display: flex; align-items: center; justify-content: space-between; background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #222; }
+        .player-info { display: flex; align-items: center; gap: 15px; }
+        .player-avatar { width: 60px; height: 60px; border-radius: 8px; border: 2px solid #ff7300; }
+        .player-details h4 { margin: 0; color: #fff; }
+        .player-details p { margin: 0; color: #888; font-size: 14px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: #1a1a1a; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid #ff7300; min-width: 300px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-section" style="max-width: 400px; margin: 100px auto; text-align: center;">
+        <h1 class="text-orange" style="font-size: 48px; margin-bottom: 10px;">Sunset</h1>
+        <div class="card" style="text-align: right;">
+            <h2 style="margin-top: 0;">تسجيل الدخول</h2>
+            <input type="text" id="username" placeholder="User">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn btn-orange" onclick="login()" style="width: 100%; margin-top: 20px; font-size: 16px;">دخول</button>
+        </div>
+    </div>
+
+    <div id="dashboard-section" style="display: none; padding: 30px; max-width: 1200px; margin: auto;">
+        <div class="flex justify-between" style="margin-bottom: 40px;">
+            <h1 class="text-orange" style="margin: 0;">Sunset Dashboard</h1>
+            <button class="btn btn-gray" onclick="location.reload()">تسجيل خروج</button>
+        </div>
+
+        <div id="activation-panel" style="display: none;">
+            <div class="card">
+                <h3 style="margin-top: 0;">تفعيل لاعب جديد</h3>
+                <div class="flex gap-10">
+                    <input type="text" id="search-player" placeholder="يوزر اللاعب بروبلوكس">
+                    <button class="btn btn-orange" onclick="activatePlayer()" style="white-space: nowrap;">بحث وتفعيل</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="margin-top: 0;">القائمة البيضاء</h3>
+                <div id="activated-list"></div>
+            </div>
+        </div>
+
+        <div id="admin-panel" style="display: none;">
+            <div class="flex gap-10" style="margin-bottom: 20px;">
+                <div class="card" style="flex: 1; text-align: center;">
+                    <h3 class="text-orange" style="margin-top: 0;">اجمالي المفعلين</h3>
+                    <h2 id="total-players" style="font-size: 36px; margin: 0;">0</h2>
+                </div>
+                <div class="card" style="flex: 1; text-align: center;">
+                    <h3 class="text-orange" style="margin-top: 0;">اللاعبين المتصلين</h3>
+                    <h2 id="online-players" style="font-size: 36px; margin: 0;">0</h2>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="margin-top: 0;">ادارة المتصلين</h3>
+                <div id="online-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="confirm-title" class="text-orange">تأكيد الإجراء</h2>
+            <div class="flex gap-10" style="justify-content: center; margin-top: 30px;">
+                <button class="btn btn-red" id="confirm-btn">تأكيد</button>
+                <button class="btn btn-gray" onclick="closeModal('confirm-modal')">الغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="warn-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-orange">تحذير لاعب</h2>
+            <input type="text" id="warn-reason" placeholder="اكتب سبب التحذير بوضوح">
+            <div class="flex gap-10" style="justify-content: center; margin-top: 30px;">
+                <button class="btn btn-orange" id="warn-submit-btn">ارسال التحذير</button>
+                <button class="btn btn-gray" onclick="closeModal('warn-modal')">الغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAction = null;
+        let targetUser = null;
+
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            if (user === 'activation team' && pass === '112233') {
+                showDashboard('activation');
+            } else if (user === 'Admin' && pass === 'admin123@4') {
+                showDashboard('admin');
+            } else {
+                alert('بيانات الدخول غير صحيحة');
+            }
+        }
+
+        function showDashboard(role) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            
+            if (role === 'activation') {
+                document.getElementById('activation-panel').style.display = 'block';
+            } else {
+                document.getElementById('admin-panel').style.display = 'block';
+            }
+            fetchData();
+        }
+
+        async function fetchData() {
+            const res = await fetch('/api/data');
+            const data = await res.json();
+            
+            document.getElementById('total-players').innerText = data.activated.length;
+            document.getElementById('online-players').innerText = data.online.length;
+            
+            renderActivated(data.activated);
+            renderOnline(data.online);
+        }
+
+        function renderActivated(players) {
+            const list = document.getElementById('activated-list');
+            list.innerHTML = players.map(p => `
+                <div class="player-card">
+                    <div class="player-info">
+                        <img src="${p.avatar}" class="player-avatar">
+                        <div class="player-details">
+                            <h4>${p.username}</h4>
+                            <p>ID: ${p.id}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-gray" onclick="deactivatePlayer(${p.id})">ازالة التفعيل</button>
+                </div>
+            `).join('');
+        }
+
+        function renderOnline(players) {
+            const list = document.getElementById('online-list');
+            if (players.length === 0) {
+                list.innerHTML = '<p style="color: #888;">لا يوجد لاعبين متصلين حاليا</p>';
+                return;
+            }
+            list.innerHTML = players.map(p => `
+                <div class="player-card">
+                    <div class="player-info">
+                        <img src="${p.avatar}" class="player-avatar">
+                        <div class="player-details">
+                            <h4>${p.username}</h4>
+                            <p>ID: ${p.id}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-10">
+                        <button class="btn btn-yellow" onclick="openWarnModal(${p.id})">تحذير</button>
+                        <button class="btn btn-orange" onclick="openConfirmModal('kick', ${p.id})">طرد</button>
+                        <button class="btn btn-red" onclick="openConfirmModal('ban', ${p.id})">حظر</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function activatePlayer() {
+            const username = document.getElementById('search-player').value;
+            if (!username) return;
+            
+            const btn = document.querySelector('button[onclick="activatePlayer()"]');
+            btn.innerText = 'جاري البحث...';
+            
+            const res = await fetch('/api/activate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username})
+            });
+            const data = await res.json();
+            
+            btn.innerText = 'بحث وتفعيل';
+            if (data.error) alert(data.error);
+            else {
+                document.getElementById('search-player').value = '';
+                fetchData();
+            }
+        }
+
+        async function deactivatePlayer(id) {
+            await fetch('/api/deactivate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id})
+            });
+            fetchData();
+        }
+
+        function openConfirmModal(action, id) {
+            currentAction = action;
+            targetUser = id;
+            document.getElementById('confirm-title').innerText = action === 'ban' ? 'تأكيد الحظر النهائي' : 'تأكيد طرد اللاعب';
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function openWarnModal(id) {
+            targetUser = id;
+            document.getElementById('warn-reason').value = '';
+            document.getElementById('warn-modal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        document.getElementById('confirm-btn').onclick = async () => {
+            await submitAction(currentAction, targetUser, "");
+            closeModal('confirm-modal');
+        };
+
+        document.getElementById('warn-submit-btn').onclick = async () => {
+            const reason = document.getElementById('warn-reason').value;
+            if (!reason) return;
+            await submitAction('warn', targetUser, reason);
+            closeModal('warn-modal');
+        };
+
+        async function submitAction(type, user_id, reason) {
+            await fetch('/api/action', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type, user_id, reason})
+            });
+            alert('تم ارسال الامر بنجاح');
+        }
+
+        // Auto refresh data every 5 seconds
+        setInterval(() => {
+            if (document.getElementById('dashboard-section').style.display === 'block') {
+                fetchData();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
