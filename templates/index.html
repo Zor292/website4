@@ -18,38 +18,48 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(255,115,0,0.9); background: #ff9500; }
         .btn-gray { background: #1e1e1e; color: #fff; border: 1px solid #3a3a3a; text-shadow: none; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
         .btn-gray:hover { background: #2a2a2a; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
+        .btn-red { background: #dc3545; color: #fff; text-shadow: 0 0 15px rgba(220,53,69,0.5); box-shadow: 0 0 25px rgba(220,53,69,0.4); }
+        .btn-red:hover { background: #c82333; box-shadow: 0 0 40px rgba(220,53,69,0.8); }
+        .btn-green { background: #28a745; color: #fff; text-shadow: 0 0 15px rgba(40,167,69,0.5); box-shadow: 0 0 25px rgba(40,167,69,0.4); }
+        .btn-green:hover { background: #218838; box-shadow: 0 0 40px rgba(40,167,69,0.8); }
         
         .card { background: #151515; padding: 28px; border-radius: 18px; margin-bottom: 25px; border-right: 5px solid #ff7300; box-shadow: 0 0 30px rgba(255,115,0,0.2), 0 10px 30px rgba(0,0,0,0.7); }
         .flex { display: flex; align-items: center; }
         .justify-between { justify-content: space-between; }
         .gap-15 { gap: 15px; }
         .flex-wrap { flex-wrap: wrap; }
+        .flex-center { justify-content: center; }
         
-        input, select { padding: 15px 18px; background: #0a0a0a; border: 2px solid #2a2a2a; color: #fff; border-radius: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 16px; transition: 0.3s; }
-        input:focus, select:focus { outline: none; border-color: #ff7300; box-shadow: 0 0 20px rgba(255,115,0,0.4); }
+        input, select, textarea { padding: 15px 18px; background: #0a0a0a; border: 2px solid #2a2a2a; color: #fff; border-radius: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 16px; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #ff7300; box-shadow: 0 0 20px rgba(255,115,0,0.4); }
+        textarea { min-height: 80px; resize: vertical; }
         
         .player-card { display: flex; align-items: center; justify-content: space-between; background: #0b0b0b; padding: 18px 22px; border-radius: 16px; margin-top: 15px; border: 1px solid #2a2a2a; transition: 0.3s; flex-wrap: wrap; gap: 14px; }
         .player-card:hover { border-color: #ff7300; background: #121212; box-shadow: 0 0 25px rgba(255,115,0,0.3); }
+        .player-card.banned { border-right-color: #dc3545; border-right: 5px solid #dc3545; }
         .player-info { display: flex; align-items: center; gap: 20px; flex-direction: row-reverse; }
         .player-avatar { width: 64px; height: 64px; border-radius: 14px; border: 2px solid #ff7300; background: #1e1e1e; object-fit: cover; box-shadow: 0 0 20px rgba(255,115,0,0.4); }
+        .player-avatar.banned-avatar { border-color: #dc3545; box-shadow: 0 0 20px rgba(220,53,69,0.4); }
         .player-details { text-align: right; }
         .player-details h4 { margin: 0; color: #fff; font-size: 20px; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         .player-details p { margin: 5px 0 0 0; color: #aaa; font-size: 14px; font-weight: 700; }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(6px); }
-        .modal-content { background: #151515; padding: 38px; border-radius: 22px; text-align: center; border: 2px solid #ff7300; min-width: 380px; box-shadow: 0 0 50px rgba(255,115,0,0.5), 0 20px 50px #000; }
+        .modal-content { background: #151515; padding: 38px; border-radius: 22px; text-align: center; border: 2px solid #ff7300; min-width: 380px; max-width: 90%; box-shadow: 0 0 50px rgba(255,115,0,0.5), 0 20px 50px #000; }
         
         .footer { text-align: center; margin-top: 50px; padding-bottom: 20px; color: #555; font-weight: 900; letter-spacing: 1.5px; }
         
         .stat-card { background: #0f0f0f; border-radius: 16px; padding: 20px; border: 1px solid #2a2a2a; min-width: 150px; flex: 1; text-align: center; box-shadow: 0 0 20px rgba(255,115,0,0.2); }
         
         .badge { background: #ff7300; color: #000; padding: 4px 14px; border-radius: 30px; font-size: 14px; font-weight: 900; text-shadow: 0 0 10px rgba(255,115,0,0.5); }
+        .badge-red { background: #dc3545; color: #fff; }
         
         @media (max-width: 768px) {
             .flex { flex-direction: column; align-items: stretch; }
             .player-card { flex-direction: column; text-align: center; }
             .player-info { flex-direction: column-reverse; }
             .title-logo { font-size: 38px; }
+            .modal-content { min-width: auto; padding: 20px; }
         }
     </style>
 </head>
@@ -62,14 +72,14 @@
             <h2 style="margin-top: 0;">بوابة الدخول</h2>
             <input type="text" id="username" placeholder="User" autocomplete="off">
             <input type="password" id="password" placeholder="Password">
-            <button class="btn btn-orange" onclick="login()" style="width: 100%; margin-top: 25px; font-size: 18px;"><i class="fas fa-sign-in-alt"></i> دخول</button>
+            <button class="btn" onclick="login()" style="width: 100%; margin-top: 25px; font-size: 18px;"><i class="fas fa-sign-in-alt"></i> دخول</button>
         </div>
     </div>
 
     <div id="dashboard-section" style="display: none; padding: 40px 20px; max-width: 1400px; margin: auto;">
         <div class="flex justify-between" style="margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
             <h1 class="title-logo"><span class="title-sunset">SUNSET</span> <span style="color:#fff;">CONTROL</span></h1>
-            <button class="btn btn-gray" onclick="location.reload()"><i class="fas fa-power-off"></i> تسجيل خروج</button>
+            <button class="btn btn-gray" onclick="logout()"><i class="fas fa-power-off"></i> تسجيل خروج</button>
         </div>
 
         <div id="activation-panel" style="display: none;">
@@ -77,7 +87,7 @@
                 <h2 style="margin-top: 0;">قسم التفعيل</h2>
                 <div class="flex gap-15" style="flex-wrap: wrap;">
                     <input type="text" id="search-player" placeholder="ابحث عن لاعب بروبلوكس" style="flex: 1;">
-                    <button class="btn btn-orange" id="search-btn" onclick="checkPlayerToActivate()" style="white-space: nowrap; min-width: 160px;"><i class="fas fa-user-plus"></i> تفعيل لاعب</button>
+                    <button class="btn" id="search-btn" onclick="checkPlayerToActivate()" style="white-space: nowrap; min-width: 160px;"><i class="fas fa-user-plus"></i> تفعيل لاعب</button>
                 </div>
             </div>
 
@@ -109,8 +119,19 @@
             </div>
 
             <div class="card">
-                <h2 style="margin-top: 0;">قائمة المحظورين</h2>
+                <div class="flex justify-between" style="flex-wrap: wrap; gap: 15px;">
+                    <h2 style="margin-top: 0;">قائمة المحظورين</h2>
+                </div>
                 <div id="banned-list"></div>
+            </div>
+
+            <div class="card" style="border-right-color: #28a745;">
+                <h2 style="margin-top: 0;"><i class="fas fa-bullhorn"></i> إرسال رسالة للجميع</h2>
+                <div class="flex gap-15" style="flex-wrap: wrap;">
+                    <textarea id="broadcast-message" placeholder="اكتب الرسالة التي تريد إرسالها للجميع..."></textarea>
+                    <button class="btn btn-green" onclick="sendBroadcast()" style="min-width: 200px;"><i class="fas fa-paper-plane"></i> إرسال للجميع</button>
+                </div>
+                <div id="broadcast-status" style="margin-top: 10px; color: #28a745; font-weight: 700;"></div>
             </div>
         </div>
         
@@ -124,7 +145,7 @@
             <h3 id="modal-username" style="margin: 0; font-size: 28px; color: #fff; font-weight: 900;"></h3>
             <p id="modal-userid" style="color: #aaa; font-size: 18px; margin-bottom: 25px; font-weight: 700;"></p>
             <div class="flex gap-15" style="justify-content: center;">
-                <button class="btn btn-orange" onclick="confirmActivation()" style="min-width: 140px;"><i class="fas fa-check"></i> تأكيد التفعيل</button>
+                <button class="btn" onclick="confirmActivation()" style="min-width: 140px;"><i class="fas fa-check"></i> تأكيد التفعيل</button>
                 <button class="btn btn-gray" onclick="closeModal('activation-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
@@ -135,7 +156,7 @@
             <h2 id="confirm-title" class="text-orange" style="font-size: 26px;">تأكيد الإجراء</h2>
             <p style="color: #ccc; margin: 20px 0;">هل أنت متأكد من تنفيذ هذا الإجراء؟</p>
             <div class="flex gap-15" style="justify-content: center; margin-top: 20px;">
-                <button class="btn btn-orange" id="confirm-btn"><i class="fas fa-check"></i> تأكيد</button>
+                <button class="btn" id="confirm-btn"><i class="fas fa-check"></i> تأكيد</button>
                 <button class="btn btn-gray" onclick="closeModal('confirm-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
@@ -146,7 +167,7 @@
             <h2 class="text-orange" style="font-size: 26px;">تحذير لاعب</h2>
             <input type="text" id="warn-reason" placeholder="اكتب سبب التحذير هنا" style="margin: 20px 0;">
             <div class="flex gap-15" style="justify-content: center; margin-top: 20px;">
-                <button class="btn btn-orange" id="warn-submit-btn"><i class="fas fa-paper-plane"></i> إرسال التحذير</button>
+                <button class="btn" id="warn-submit-btn"><i class="fas fa-paper-plane"></i> إرسال التحذير</button>
                 <button class="btn btn-gray" onclick="closeModal('warn-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
@@ -156,6 +177,7 @@
         let currentAction = null;
         let targetUser = null;
         let pendingPlayer = null;
+        let currentRole = null;
 
         let activatedPlayers = [];
         let onlinePlayers = [];
@@ -170,23 +192,6 @@
                 bannedPlayers = data.banned || [];
             } catch (e) {
                 console.warn('Using fallback data');
-                if (activatedPlayers.length === 0) {
-                    activatedPlayers = [
-                        { id: 123456, username: "Faris_Pro", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=123456&width=150&height=150&format=png" },
-                        { id: 789012, username: "SunsetKing", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=789012&width=150&height=150&format=png" }
-                    ];
-                }
-                if (onlinePlayers.length === 0) {
-                    onlinePlayers = [
-                        { id: 123456, username: "Faris_Pro", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=123456&width=150&height=150&format=png" },
-                        { id: 234567, username: "DarkNinja22", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=234567&width=150&height=150&format=png" }
-                    ];
-                }
-                if (bannedPlayers.length === 0) {
-                    bannedPlayers = [
-                        { id: 555777, username: "ToxicPlayer", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=555777&width=150&height=150&format=png" }
-                    ];
-                }
             }
             
             document.getElementById('total-players').innerText = activatedPlayers.length;
@@ -203,12 +208,22 @@
             const pass = document.getElementById('password').value.trim();
             
             if (user === 'activation team' && pass === '112233') {
+                currentRole = 'activation';
                 showDashboard('activation');
             } else if (user === 'Admin' && pass === 'admin123@4') {
+                currentRole = 'admin';
                 showDashboard('admin');
             } else {
                 alert('بيانات الدخول غير صحيحة');
             }
+        }
+
+        function logout() {
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            currentRole = null;
         }
 
         function showDashboard(role) {
@@ -234,13 +249,13 @@
             }
             list.innerHTML = players.map(p => `
                 <div class="player-card">
-                    <button class="btn btn-orange" onclick="deactivatePlayer(${p.id})"><i class="fas fa-user-minus"></i> إزالة التفعيل</button>
+                    <button class="btn btn-red" onclick="deactivatePlayer(${p.id})"><i class="fas fa-user-minus"></i> إزالة التفعيل</button>
                     <div class="player-info">
                         <div class="player-details">
                             <h4>${p.username}</h4>
                             <p>ID: ${p.id}</p>
                         </div>
-                        <img src="${p.avatar}" class="player-avatar" alt="avatar">
+                        <img src="${p.avatar || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + p.id + '&width=150&height=150&format=png'}" class="player-avatar" alt="avatar" onerror="this.src='https://ui-avatars.com/api/?name='+this.alt+'&background=ff7300&color=fff&size=64'">
                     </div>
                 </div>
             `).join('');
@@ -252,22 +267,28 @@
                 list.innerHTML = '<p style="color: #666; text-align: center;">لا يوجد لاعبين متصلين حاليا</p>';
                 return;
             }
-            list.innerHTML = players.map(p => `
-                <div class="player-card">
+            list.innerHTML = players.map(p => {
+                const isBanned = bannedPlayers.some(b => b.id === p.id);
+                return `
+                <div class="player-card ${isBanned ? 'banned' : ''}">
                     <div class="flex gap-15" style="flex-wrap: wrap;">
-                        <button class="btn btn-orange" onclick="openWarnModal(${p.id})"><i class="fas fa-exclamation-triangle"></i> تحذير</button>
-                        <button class="btn btn-orange" onclick="openConfirmModal('kick', ${p.id})"><i class="fas fa-sign-out-alt"></i> طرد</button>
-                        <button class="btn btn-orange" onclick="openConfirmModal('ban', ${p.id})"><i class="fas fa-ban"></i> حظر</button>
+                        ${!isBanned ? `
+                            <button class="btn" onclick="openWarnModal(${p.id})"><i class="fas fa-exclamation-triangle"></i> تحذير</button>
+                            <button class="btn btn-red" onclick="openConfirmModal('kick', ${p.id})"><i class="fas fa-sign-out-alt"></i> طرد</button>
+                            <button class="btn btn-red" onclick="openConfirmModal('ban', ${p.id})"><i class="fas fa-ban"></i> حظر</button>
+                        ` : `
+                            <button class="btn btn-green" onclick="openConfirmModal('unban', ${p.id})"><i class="fas fa-check"></i> إلغاء الحظر</button>
+                        `}
                     </div>
                     <div class="player-info">
                         <div class="player-details">
-                            <h4>${p.username}</h4>
+                            <h4>${p.username} ${isBanned ? '<span class="badge badge-red">محظور</span>' : ''}</h4>
                             <p>ID: ${p.id}</p>
                         </div>
-                        <img src="${p.avatar}" class="player-avatar" alt="avatar">
+                        <img src="${p.avatar || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + p.id + '&width=150&height=150&format=png'}" class="player-avatar ${isBanned ? 'banned-avatar' : ''}" alt="avatar" onerror="this.src='https://ui-avatars.com/api/?name='+this.alt+'&background=ff7300&color=fff&size=64'">
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function renderBannedList(players) {
@@ -277,14 +298,14 @@
                 return;
             }
             list.innerHTML = players.map(p => `
-                <div class="player-card" style="border-right-color: #ff7300;">
-                    <span class="badge"><i class="fas fa-ban"></i> محظور</span>
+                <div class="player-card banned">
+                    <button class="btn btn-green" onclick="openConfirmModal('unban', ${p.id})"><i class="fas fa-check"></i> إلغاء الحظر</button>
                     <div class="player-info">
                         <div class="player-details">
                             <h4>${p.username}</h4>
                             <p>ID: ${p.id}</p>
                         </div>
-                        <img src="${p.avatar}" class="player-avatar" alt="avatar">
+                        <img src="${p.avatar || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + p.id + '&width=150&height=150&format=png'}" class="player-avatar banned-avatar" alt="avatar" onerror="this.src='https://ui-avatars.com/api/?name='+this.alt+'&background=dc3545&color=fff&size=64'">
                     </div>
                 </div>
             `).join('');
@@ -313,7 +334,7 @@
                     alert(data.error);
                 } else {
                     pendingPlayer = data.player;
-                    document.getElementById('modal-avatar').src = data.player.avatar;
+                    document.getElementById('modal-avatar').src = data.player.avatar || 'https://ui-avatars.com/api/?name=' + data.player.username + '&background=ff7300&color=fff&size=110';
                     document.getElementById('modal-username').innerText = data.player.username;
                     document.getElementById('modal-userid').innerText = 'ID: ' + data.player.id;
                     document.getElementById('activation-modal').style.display = 'flex';
@@ -363,7 +384,12 @@
         function openConfirmModal(action, id) {
             currentAction = action;
             targetUser = id;
-            document.getElementById('confirm-title').innerText = action === 'ban' ? 'تأكيد الحظر النهائي' : 'تأكيد طرد اللاعب';
+            const titles = {
+                'ban': 'تأكيد الحظر النهائي',
+                'kick': 'تأكيد طرد اللاعب',
+                'unban': 'تأكيد إلغاء الحظر'
+            };
+            document.getElementById('confirm-title').innerText = titles[action] || 'تأكيد الإجراء';
             document.getElementById('confirm-modal').style.display = 'flex';
         }
 
@@ -408,17 +434,18 @@
             }
         }
 
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
+        async function sendBroadcast() {
+            const message = document.getElementById('broadcast-message').value.trim();
+            if (!message) {
+                alert('الرجاء كتابة رسالة');
+                return;
             }
-        }
-
-        setInterval(() => {
-            if (document.getElementById('dashboard-section').style.display === 'block') {
-                fetchData();
-            }
-        }, 7000);
-    </script>
-</body>
-</html>
+            
+            const btn = document.querySelector('#admin-panel .card:last-child .btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            
+            try {
+                const res = await fetch('/api/broadcast', {
+                    method: 'POST',
+                    headers
