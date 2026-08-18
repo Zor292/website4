@@ -54,12 +54,95 @@
         .badge { background: #ff7300; color: #000; padding: 4px 14px; border-radius: 30px; font-size: 14px; font-weight: 900; text-shadow: 0 0 10px rgba(255,115,0,0.5); }
         .badge-red { background: #dc3545; color: #fff; }
         
+        /* نظام الاشعارات الجديد */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%;
+            max-width: 500px;
+            pointer-events: none;
+        }
+        .notification {
+            background: #151515;
+            border: 2px solid #ff7300;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 30px rgba(255,115,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            pointer-events: all;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeIn 0.5s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        .notification.success { border-color: #28a745; box-shadow: 0 0 30px rgba(40,167,69,0.3); }
+        .notification.error { border-color: #dc3545; box-shadow: 0 0 30px rgba(220,53,69,0.3); }
+        .notification.warning { border-color: #ffc107; box-shadow: 0 0 30px rgba(255,193,7,0.3); }
+        
+        .notification-icon {
+            font-size: 24px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .notification.success .notification-icon { color: #28a745; }
+        .notification.error .notification-icon { color: #dc3545; }
+        .notification.warning .notification-icon { color: #ffc107; }
+        
+        .notification-content {
+            flex: 1;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .notification-content .title {
+            font-size: 14px;
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #ff7300;
+            animation: progressBar 4s linear forwards;
+        }
+        .notification.success .notification-progress { background: #28a745; }
+        .notification.error .notification-progress { background: #dc3545; }
+        .notification.warning .notification-progress { background: #ffc107; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        
+        .notification.hide {
+            animation: fadeOut 0.5s forwards;
+        }
+        
         @media (max-width: 768px) {
             .flex { flex-direction: column; align-items: stretch; }
             .player-card { flex-direction: column; text-align: center; }
             .player-info { flex-direction: column-reverse; }
             .title-logo { font-size: 38px; }
             .modal-content { min-width: auto; padding: 20px; }
+            .notification-container { width: 95%; }
         }
     </style>
 </head>
@@ -71,7 +154,7 @@
         <div class="card" style="text-align: right; margin-top: 30px;">
             <h2 style="margin-top: 0;">بوابة الدخول</h2>
             <input type="text" id="username" placeholder="User" autocomplete="off">
-            <input type="password" id="password" placeholder="Password">
+            <input type="password" id="password" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
             <button class="btn" onclick="login()" style="width: 100%; margin-top: 25px; font-size: 18px;"><i class="fas fa-sign-in-alt"></i> دخول</button>
         </div>
     </div>
@@ -86,7 +169,7 @@
             <div class="card">
                 <h2 style="margin-top: 0;">قسم التفعيل</h2>
                 <div class="flex gap-15" style="flex-wrap: wrap;">
-                    <input type="text" id="search-player" placeholder="ابحث عن لاعب بروبلوكس" style="flex: 1;">
+                    <input type="text" id="search-player" placeholder="ابحث عن لاعب بروبلوكس" style="flex: 1;" onkeypress="if(event.key==='Enter') checkPlayerToActivate()">
                     <button class="btn" id="search-btn" onclick="checkPlayerToActivate()" style="white-space: nowrap; min-width: 160px;"><i class="fas fa-user-plus"></i> تفعيل لاعب</button>
                 </div>
             </div>
@@ -173,6 +256,8 @@
         </div>
     </div>
 
+    <div id="notification-container" class="notification-container"></div>
+
     <script>
         let currentAction = null;
         let targetUser = null;
@@ -182,6 +267,49 @@
         let activatedPlayers = [];
         let onlinePlayers = [];
         let bannedPlayers = [];
+
+        // نظام الاشعارات
+        function showNotification(message, type = 'info', title = '') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const titles = {
+                success: 'نجاح',
+                error: 'خطأ',
+                warning: 'تحذير',
+                info: 'معلومة'
+            };
+            
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icons[type] || icons.info}"></i>
+                </div>
+                <div class="notification-content">
+                    <span class="title">${title || titles[type] || 'معلومة'}</span>
+                    ${message}
+                </div>
+                <div class="notification-progress"></div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 500);
+            }, 4000);
+        }
 
         async function fetchData() {
             try {
@@ -207,14 +335,21 @@
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
             
+            if (!user || !pass) {
+                showNotification('الرجاء إدخال اسم المستخدم وكلمة المرور', 'warning', 'تنبيه');
+                return;
+            }
+            
             if (user === 'activation team' && pass === '112233') {
                 currentRole = 'activation';
+                showNotification('تم تسجيل الدخول بنجاح', 'success', 'مرحباً');
                 showDashboard('activation');
             } else if (user === 'Admin' && pass === 'admin123@4') {
                 currentRole = 'admin';
+                showNotification('تم تسجيل الدخول بنجاح', 'success', 'مرحباً');
                 showDashboard('admin');
             } else {
-                alert('بيانات الدخول غير صحيحة');
+                showNotification('بيانات الدخول غير صحيحة', 'error', 'فشل الدخول');
             }
         }
 
@@ -224,6 +359,7 @@
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             currentRole = null;
+            showNotification('تم تسجيل الخروج بنجاح', 'info', 'مع السلامة');
         }
 
         function showDashboard(role) {
@@ -305,147 +441,4 @@
                             <h4>${p.username}</h4>
                             <p>ID: ${p.id}</p>
                         </div>
-                        <img src="${p.avatar || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + p.id + '&width=150&height=150&format=png'}" class="player-avatar banned-avatar" alt="avatar" onerror="this.src='https://ui-avatars.com/api/?name='+this.alt+'&background=dc3545&color=fff&size=64'">
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function checkPlayerToActivate() {
-            const username = document.getElementById('search-player').value.trim();
-            if (!username) {
-                alert('الرجاء إدخال اسم اللاعب');
-                return;
-            }
-            
-            const btn = document.getElementById('search-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
-            
-            try {
-                const res = await fetch('/api/check_player', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username})
-                });
-                const data = await res.json();
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> تفعيل لاعب';
-                
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    pendingPlayer = data.player;
-                    document.getElementById('modal-avatar').src = data.player.avatar || 'https://ui-avatars.com/api/?name=' + data.player.username + '&background=ff7300&color=fff&size=110';
-                    document.getElementById('modal-username').innerText = data.player.username;
-                    document.getElementById('modal-userid').innerText = 'ID: ' + data.player.id;
-                    document.getElementById('activation-modal').style.display = 'flex';
-                }
-            } catch (e) {
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> تفعيل لاعب';
-                alert('تعذر الاتصال بالسيرفر');
-            }
-        }
-
-        async function confirmActivation() {
-            if (!pendingPlayer) return;
-            
-            try {
-                const res = await fetch('/api/activate', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({player: pendingPlayer})
-                });
-                const data = await res.json();
-                closeModal('activation-modal');
-                if (data.error) alert(data.error);
-                else {
-                    document.getElementById('search-player').value = '';
-                    pendingPlayer = null;
-                    await fetchData();
-                }
-            } catch (e) {
-                alert('تعذر الاتصال بالسيرفر');
-                closeModal('activation-modal');
-            }
-        }
-
-        async function deactivatePlayer(id) {
-            try {
-                await fetch('/api/deactivate', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({id})
-                });
-                await fetchData();
-            } catch (e) {
-                alert('تعذر الاتصال بالسيرفر');
-            }
-        }
-
-        function openConfirmModal(action, id) {
-            currentAction = action;
-            targetUser = id;
-            const titles = {
-                'ban': 'تأكيد الحظر النهائي',
-                'kick': 'تأكيد طرد اللاعب',
-                'unban': 'تأكيد إلغاء الحظر'
-            };
-            document.getElementById('confirm-title').innerText = titles[action] || 'تأكيد الإجراء';
-            document.getElementById('confirm-modal').style.display = 'flex';
-        }
-
-        function openWarnModal(id) {
-            targetUser = id;
-            document.getElementById('warn-reason').value = '';
-            document.getElementById('warn-modal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        document.getElementById('confirm-btn').onclick = async () => {
-            await submitAction(currentAction, targetUser, "");
-            closeModal('confirm-modal');
-            await fetchData();
-        };
-
-        document.getElementById('warn-submit-btn').onclick = async () => {
-            const reason = document.getElementById('warn-reason').value.trim();
-            if (!reason) {
-                alert('الرجاء كتابة سبب التحذير');
-                return;
-            }
-            await submitAction('warn', targetUser, reason);
-            closeModal('warn-modal');
-            await fetchData();
-        };
-
-        async function submitAction(type, user_id, reason) {
-            try {
-                await fetch('/api/action', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({type, user_id, reason})
-                });
-                alert('تم تنفيذ الإجراء بنجاح');
-                await fetchData();
-            } catch (e) {
-                alert('تعذر تنفيذ الإجراء');
-            }
-        }
-
-        async function sendBroadcast() {
-            const message = document.getElementById('broadcast-message').value.trim();
-            if (!message) {
-                alert('الرجاء كتابة رسالة');
-                return;
-            }
-            
-            const btn = document.querySelector('#admin-panel .card:last-child .btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-            
-            try {
-                const res = await fetch('/api/broadcast', {
-                    method: 'POST',
-                    headers
+                        <img src="${p.avatar || 'https
