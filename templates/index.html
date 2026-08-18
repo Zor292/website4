@@ -3,48 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sunset • Control Panel</title>
+    <title>Sunset</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
         
         * { box-sizing: border-box; }
         body { margin: 0; background-color: #0d0d0d; color: #ffffff; font-family: 'Cairo', sans-serif; direction: rtl; }
-        .text-orange { color: #ff7300; font-weight: 900; }
+        .text-orange { color: #ff7300; font-weight: 900; text-shadow: 0 0 15px rgba(255,115,0,0.6); }
         .title-logo { font-size: 48px; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .title-sunset { color: #ff7300; }
+        .title-sunset { color: #ff7300; text-shadow: 0 0 20px rgba(255,115,0,0.8); }
         
-        .btn { padding: 12px 24px; border: none; cursor: pointer; border-radius: 8px; font-weight: 900; font-family: 'Cairo', sans-serif; transition: 0.25s; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        .btn-orange { background: #ff7300; color: #000; }
-        .btn-red { background: #e63946; color: #fff; }
-        .btn-yellow { background: #f4c10f; color: #000; }
-        .btn-gray { background: #1e1e1e; color: #fff; border: 1px solid #3a3a3a; }
+        .btn { padding: 12px 24px; border: none; cursor: pointer; border-radius: 8px; font-weight: 900; font-family: 'Cairo', sans-serif; transition: 0.3s; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ff7300; color: #000; text-shadow: 0 0 10px rgba(255,115,0,0.5); box-shadow: 0 0 25px rgba(255,115,0,0.5); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(255,115,0,0.9); background: #ff9500; }
+        .btn-gray { background: #1e1e1e; color: #fff; border: 1px solid #3a3a3a; text-shadow: none; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+        .btn-gray:hover { background: #2a2a2a; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
         
-        .card { background: #151515; padding: 28px; border-radius: 18px; margin-bottom: 25px; border-right: 5px solid #ff7300; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        .card { background: #151515; padding: 28px; border-radius: 18px; margin-bottom: 25px; border-right: 5px solid #ff7300; box-shadow: 0 0 30px rgba(255,115,0,0.2), 0 10px 30px rgba(0,0,0,0.7); }
         .flex { display: flex; align-items: center; }
         .justify-between { justify-content: space-between; }
         .gap-15 { gap: 15px; }
         .flex-wrap { flex-wrap: wrap; }
         
-        input, select { padding: 15px 18px; background: #0a0a0a; border: 2px solid #2a2a2a; color: #fff; border-radius: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 16px; transition: 0.25s; }
-        input:focus, select:focus { outline: none; border-color: #ff7300; box-shadow: 0 0 0 3px rgba(255,115,0,0.2); }
+        input, select { padding: 15px 18px; background: #0a0a0a; border: 2px solid #2a2a2a; color: #fff; border-radius: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 16px; transition: 0.3s; }
+        input:focus, select:focus { outline: none; border-color: #ff7300; box-shadow: 0 0 20px rgba(255,115,0,0.4); }
         
-        .player-card { display: flex; align-items: center; justify-content: space-between; background: #0b0b0b; padding: 18px 22px; border-radius: 16px; margin-top: 15px; border: 1px solid #2a2a2a; transition: 0.2s; flex-wrap: wrap; gap: 14px; }
-        .player-card:hover { border-color: #ff7300; background: #121212; }
+        .player-card { display: flex; align-items: center; justify-content: space-between; background: #0b0b0b; padding: 18px 22px; border-radius: 16px; margin-top: 15px; border: 1px solid #2a2a2a; transition: 0.3s; flex-wrap: wrap; gap: 14px; }
+        .player-card:hover { border-color: #ff7300; background: #121212; box-shadow: 0 0 25px rgba(255,115,0,0.3); }
         .player-info { display: flex; align-items: center; gap: 20px; flex-direction: row-reverse; }
-        .player-avatar { width: 64px; height: 64px; border-radius: 14px; border: 2px solid #ff7300; background: #1e1e1e; object-fit: cover; }
+        .player-avatar { width: 64px; height: 64px; border-radius: 14px; border: 2px solid #ff7300; background: #1e1e1e; object-fit: cover; box-shadow: 0 0 20px rgba(255,115,0,0.4); }
         .player-details { text-align: right; }
-        .player-details h4 { margin: 0; color: #fff; font-size: 20px; font-weight: 900; }
+        .player-details h4 { margin: 0; color: #fff; font-size: 20px; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         .player-details p { margin: 5px 0 0 0; color: #aaa; font-size: 14px; font-weight: 700; }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(6px); }
-        .modal-content { background: #151515; padding: 38px; border-radius: 22px; text-align: center; border: 2px solid #ff7300; min-width: 380px; box-shadow: 0 20px 50px #000; }
+        .modal-content { background: #151515; padding: 38px; border-radius: 22px; text-align: center; border: 2px solid #ff7300; min-width: 380px; box-shadow: 0 0 50px rgba(255,115,0,0.5), 0 20px 50px #000; }
         
         .footer { text-align: center; margin-top: 50px; padding-bottom: 20px; color: #555; font-weight: 900; letter-spacing: 1.5px; }
         
-        .stat-card { background: #0f0f0f; border-radius: 16px; padding: 20px; border: 1px solid #2a2a2a; min-width: 150px; flex: 1; text-align: center; }
+        .stat-card { background: #0f0f0f; border-radius: 16px; padding: 20px; border: 1px solid #2a2a2a; min-width: 150px; flex: 1; text-align: center; box-shadow: 0 0 20px rgba(255,115,0,0.2); }
         
-        .badge { background: #ff7300; color: #000; padding: 4px 14px; border-radius: 30px; font-size: 14px; font-weight: 900; }
+        .badge { background: #ff7300; color: #000; padding: 4px 14px; border-radius: 30px; font-size: 14px; font-weight: 900; text-shadow: 0 0 10px rgba(255,115,0,0.5); }
         
         @media (max-width: 768px) {
             .flex { flex-direction: column; align-items: stretch; }
@@ -56,43 +55,38 @@
 </head>
 <body>
 
-    <!-- Login Section -->
     <div id="login-section" style="max-width: 450px; margin: 10vh auto; text-align: center; padding: 20px;">
         <h1 class="title-logo"><span class="title-sunset">SUNSET</span> <span style="color:#fff;">CONTROL</span></h1>
         <p style="color: #aaa; font-weight: 700;">لوحة التحكم الرسمية</p>
         <div class="card" style="text-align: right; margin-top: 30px;">
-            <h2 style="margin-top: 0;">🔐 بوابة الدخول</h2>
+            <h2 style="margin-top: 0;">بوابة الدخول</h2>
             <input type="text" id="username" placeholder="User" autocomplete="off">
             <input type="password" id="password" placeholder="Password">
-            <button class="btn btn-orange" onclick="login()" style="width: 100%; margin-top: 25px; font-size: 18px;">دخول</button>
+            <button class="btn btn-orange" onclick="login()" style="width: 100%; margin-top: 25px; font-size: 18px;"><i class="fas fa-sign-in-alt"></i> دخول</button>
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div id="dashboard-section" style="display: none; padding: 40px 20px; max-width: 1400px; margin: auto;">
         <div class="flex justify-between" style="margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
             <h1 class="title-logo"><span class="title-sunset">SUNSET</span> <span style="color:#fff;">CONTROL</span></h1>
-            <button class="btn btn-gray" onclick="location.reload()">⏻ تسجيل خروج</button>
+            <button class="btn btn-gray" onclick="location.reload()"><i class="fas fa-power-off"></i> تسجيل خروج</button>
         </div>
 
-        <!-- Activation Panel -->
         <div id="activation-panel" style="display: none;">
             <div class="card">
-                <h2 style="margin-top: 0;">⚡ قسم التفعيل</h2>
+                <h2 style="margin-top: 0;">قسم التفعيل</h2>
                 <div class="flex gap-15" style="flex-wrap: wrap;">
-                    <input type="text" id="search-player" placeholder="🔍 بحث عن لاعب بروبلوكس (اسم المستخدم)" style="flex: 1;">
-                    <button class="btn btn-orange" id="search-btn" onclick="checkPlayerToActivate()" style="white-space: nowrap; min-width: 160px;">✨ تفعيل لاعب</button>
+                    <input type="text" id="search-player" placeholder="ابحث عن لاعب بروبلوكس" style="flex: 1;">
+                    <button class="btn btn-orange" id="search-btn" onclick="checkPlayerToActivate()" style="white-space: nowrap; min-width: 160px;"><i class="fas fa-user-plus"></i> تفعيل لاعب</button>
                 </div>
-                <p style="color: #888; font-size: 14px; margin-top: 10px;">ابحث عن يوزر اللاعب ثم اضغط تفعيل — سيظهر الـ Pop out للتفعيل.</p>
             </div>
 
             <div class="card">
-                <h2 style="margin-top: 0;">📋 قائمة اللاعبين المفعلين</h2>
+                <h2 style="margin-top: 0;">قائمة اللاعبين المفعلين</h2>
                 <div id="activated-list"></div>
             </div>
         </div>
 
-        <!-- Admin Panel -->
         <div id="admin-panel" style="display: none;">
             <div class="flex gap-15" style="margin-bottom: 30px; flex-wrap: wrap;">
                 <div class="stat-card">
@@ -110,12 +104,12 @@
             </div>
 
             <div class="card">
-                <h2 style="margin-top: 0;">👥 اللاعبين المتصلين الآن</h2>
+                <h2 style="margin-top: 0;">اللاعبين المتصلين</h2>
                 <div id="online-list"></div>
             </div>
 
             <div class="card">
-                <h2 style="margin-top: 0;">🚫 قائمة المحظورين</h2>
+                <h2 style="margin-top: 0;">قائمة المحظورين</h2>
                 <div id="banned-list"></div>
             </div>
         </div>
@@ -123,40 +117,37 @@
         <div class="footer">SUNSET CONTROL • Developed by Firas</div>
     </div>
 
-    <!-- Activation Modal -->
     <div id="activation-modal" class="modal">
         <div class="modal-content">
-            <h2 class="text-orange">🎮 معلومات اللاعب</h2>
-            <img id="modal-avatar" src="" style="width: 110px; height: 110px; border-radius: 20px; border: 3px solid #ff7300; margin: 15px 0; background: #222; object-fit: cover;">
+            <h2 class="text-orange">معلومات اللاعب</h2>
+            <img id="modal-avatar" src="" style="width: 110px; height: 110px; border-radius: 20px; border: 3px solid #ff7300; margin: 15px 0; background: #222; object-fit: cover; box-shadow: 0 0 30px rgba(255,115,0,0.6);">
             <h3 id="modal-username" style="margin: 0; font-size: 28px; color: #fff; font-weight: 900;"></h3>
             <p id="modal-userid" style="color: #aaa; font-size: 18px; margin-bottom: 25px; font-weight: 700;"></p>
             <div class="flex gap-15" style="justify-content: center;">
-                <button class="btn btn-orange" onclick="confirmActivation()" style="min-width: 140px;">✅ تأكيد التفعيل</button>
-                <button class="btn btn-gray" onclick="closeModal('activation-modal')">إلغاء</button>
+                <button class="btn btn-orange" onclick="confirmActivation()" style="min-width: 140px;"><i class="fas fa-check"></i> تأكيد التفعيل</button>
+                <button class="btn btn-gray" onclick="closeModal('activation-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- Confirmation Modal (Ban/Kick) -->
     <div id="confirm-modal" class="modal">
         <div class="modal-content">
             <h2 id="confirm-title" class="text-orange" style="font-size: 26px;">تأكيد الإجراء</h2>
             <p style="color: #ccc; margin: 20px 0;">هل أنت متأكد من تنفيذ هذا الإجراء؟</p>
             <div class="flex gap-15" style="justify-content: center; margin-top: 20px;">
-                <button class="btn btn-red" id="confirm-btn">تأكيد</button>
-                <button class="btn btn-gray" onclick="closeModal('confirm-modal')">إلغاء</button>
+                <button class="btn btn-orange" id="confirm-btn"><i class="fas fa-check"></i> تأكيد</button>
+                <button class="btn btn-gray" onclick="closeModal('confirm-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- Warn Modal -->
     <div id="warn-modal" class="modal">
         <div class="modal-content">
-            <h2 class="text-orange" style="font-size: 26px;">⚠️ تحذير لاعب</h2>
+            <h2 class="text-orange" style="font-size: 26px;">تحذير لاعب</h2>
             <input type="text" id="warn-reason" placeholder="اكتب سبب التحذير هنا" style="margin: 20px 0;">
             <div class="flex gap-15" style="justify-content: center; margin-top: 20px;">
-                <button class="btn btn-yellow" id="warn-submit-btn">📨 إرسال التحذير</button>
-                <button class="btn btn-gray" onclick="closeModal('warn-modal')">إلغاء</button>
+                <button class="btn btn-orange" id="warn-submit-btn"><i class="fas fa-paper-plane"></i> إرسال التحذير</button>
+                <button class="btn btn-gray" onclick="closeModal('warn-modal')"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
     </div>
@@ -165,9 +156,6 @@
         let currentAction = null;
         let targetUser = null;
         let pendingPlayer = null;
-
-        // بيانات واقعية مرتبطة بالسيرفر — استبدل هذه الدوال باستدعاءات API الفعلية
-        // في النسخة الحية هذه البيانات تأتي من /api/data و /api/check_player وغيرها
 
         let activatedPlayers = [];
         let onlinePlayers = [];
@@ -181,8 +169,7 @@
                 onlinePlayers = data.online || [];
                 bannedPlayers = data.banned || [];
             } catch (e) {
-                console.warn('Using fallback data (API not connected in this preview)');
-                // بيانات تجريبية فقط للعرض، لكن كل شيء يعمل
+                console.warn('Using fallback data');
                 if (activatedPlayers.length === 0) {
                     activatedPlayers = [
                         { id: 123456, username: "Faris_Pro", avatar: "https://www.roblox.com/headshot-thumbnail/image?userId=123456&width=150&height=150&format=png" },
@@ -247,7 +234,7 @@
             }
             list.innerHTML = players.map(p => `
                 <div class="player-card">
-                    <button class="btn btn-gray" onclick="deactivatePlayer(${p.id})">🗑️ إزالة التفعيل</button>
+                    <button class="btn btn-orange" onclick="deactivatePlayer(${p.id})"><i class="fas fa-user-minus"></i> إزالة التفعيل</button>
                     <div class="player-info">
                         <div class="player-details">
                             <h4>${p.username}</h4>
@@ -268,9 +255,9 @@
             list.innerHTML = players.map(p => `
                 <div class="player-card">
                     <div class="flex gap-15" style="flex-wrap: wrap;">
-                        <button class="btn btn-yellow" onclick="openWarnModal(${p.id})">⚠️ تحذير</button>
-                        <button class="btn btn-orange" onclick="openConfirmModal('kick', ${p.id})">👢 طرد</button>
-                        <button class="btn btn-red" onclick="openConfirmModal('ban', ${p.id})">🔨 حظر</button>
+                        <button class="btn btn-orange" onclick="openWarnModal(${p.id})"><i class="fas fa-exclamation-triangle"></i> تحذير</button>
+                        <button class="btn btn-orange" onclick="openConfirmModal('kick', ${p.id})"><i class="fas fa-sign-out-alt"></i> طرد</button>
+                        <button class="btn btn-orange" onclick="openConfirmModal('ban', ${p.id})"><i class="fas fa-ban"></i> حظر</button>
                     </div>
                     <div class="player-info">
                         <div class="player-details">
@@ -290,8 +277,8 @@
                 return;
             }
             list.innerHTML = players.map(p => `
-                <div class="player-card" style="border-right-color: #e63946;">
-                    <span class="badge">محظور</span>
+                <div class="player-card" style="border-right-color: #ff7300;">
+                    <span class="badge"><i class="fas fa-ban"></i> محظور</span>
                     <div class="player-info">
                         <div class="player-details">
                             <h4>${p.username}</h4>
@@ -311,7 +298,7 @@
             }
             
             const btn = document.getElementById('search-btn');
-            btn.innerText = 'جاري البحث...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
             
             try {
                 const res = await fetch('/api/check_player', {
@@ -320,7 +307,7 @@
                     body: JSON.stringify({username})
                 });
                 const data = await res.json();
-                btn.innerText = '✨ تفعيل لاعب';
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> تفعيل لاعب';
                 
                 if (data.error) {
                     alert(data.error);
@@ -332,8 +319,8 @@
                     document.getElementById('activation-modal').style.display = 'flex';
                 }
             } catch (e) {
-                btn.innerText = '✨ تفعيل لاعب';
-                alert('تعذر الاتصال بالسيرفر. تأكد من تشغيل الخادم.');
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> تفعيل لاعب';
+                alert('تعذر الاتصال بالسيرفر');
             }
         }
 
@@ -376,7 +363,7 @@
         function openConfirmModal(action, id) {
             currentAction = action;
             targetUser = id;
-            document.getElementById('confirm-title').innerText = action === 'ban' ? '🔨 تأكيد الحظر النهائي' : '👢 تأكيد طرد اللاعب';
+            document.getElementById('confirm-title').innerText = action === 'ban' ? 'تأكيد الحظر النهائي' : 'تأكيد طرد اللاعب';
             document.getElementById('confirm-modal').style.display = 'flex';
         }
 
@@ -427,7 +414,6 @@
             }
         }
 
-        // تحديث دوري
         setInterval(() => {
             if (document.getElementById('dashboard-section').style.display === 'block') {
                 fetchData();
