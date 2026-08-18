@@ -130,10 +130,6 @@ def deactivate_player():
             
         data = load_data()
         data["activated"] = [p for p in data["activated"] if p["id"] != user_id]
-        
-        if user_id in data.get("banned_ids", []):
-            data["banned"] = [p for p in data["banned"] if p["id"] != user_id]
-        
         save_data(data)
         
         return jsonify({"success": True})
@@ -181,9 +177,6 @@ def submit_action():
             if not any(p["id"] == user_id for p in data["banned"]):
                 data["banned"].append(player_info)
                 data["activated"] = [p for p in data["activated"] if p["id"] != user_id]
-                
-        if action_type == 'unban':
-            data["banned"] = [p for p in data["banned"] if p["id"] != user_id]
         
         data["pending_actions"].append({
             "type": action_type,
@@ -194,27 +187,6 @@ def submit_action():
         
         save_data(data)
         return jsonify({"success": True})
-    except:
-        return jsonify({"error": "حدث خطأ في السيرفر"}), 500
-
-@app.route('/api/broadcast', methods=['POST'])
-def broadcast_message():
-    try:
-        req_data = request.json
-        message = req_data.get('message', '')
-        
-        if not message:
-            return jsonify({"error": "الرجاء إدخال رسالة"}), 400
-        
-        data = load_data()
-        data["pending_actions"].append({
-            "type": "broadcast",
-            "message": message,
-            "timestamp": datetime.now().isoformat()
-        })
-        
-        save_data(data)
-        return jsonify({"success": True, "message": "تم إرسال الرسالة للجميع"})
     except:
         return jsonify({"error": "حدث خطأ في السيرفر"}), 500
 
@@ -232,7 +204,6 @@ def roblox_sync():
         
         return jsonify({
             "activated_ids": [p["id"] for p in data["activated"]],
-            "banned_ids": [p["id"] for p in data["banned"]],
             "actions": actions
         })
     except:
